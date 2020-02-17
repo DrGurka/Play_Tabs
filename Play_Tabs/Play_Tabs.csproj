@@ -48,25 +48,30 @@
     <Compile Include="Tools\PSARC\BigEndianReader.cs" />
     <Compile Include="Tools\PSARC\Entry.cs" />
     <Compile Include="Tools\PSARC\RijndaelEncryptor.cs" />
+    <Compile Include="Tools\SongObject.cs" />
     <Compile Include="Tools\SongOrganizer.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="ICSharpCode.SharpZipLib">
-      <HintPath>..\..\..\..\Desktop\rocksmith-custom-song-toolkit-master\lib\ZLib\ICSharpCode.SharpZipLib.dll</HintPath>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>libs\ZLib\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
-    <Reference Include="MiscUtil">
-      <HintPath>..\..\..\..\Desktop\rocksmith-custom-song-toolkit-master\lib\MiscUtil\MiscUtil.dll</HintPath>
+    <Reference Include="MiscUtil, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d3c42c4bfacf7596, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>libs\MiscUtil\MiscUtil.dll</HintPath>
     </Reference>
     <Reference Include="MonoGame.Framework">
       <HintPath>$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\Windows\MonoGame.Framework.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\..\..\Desktop\rocksmith-custom-song-toolkit-master\lib\Newtonsoft.Json\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>libs\Newtonsoft.Json\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
-    <Reference Include="zlib.net">
-      <HintPath>..\..\..\..\Desktop\rocksmith-custom-song-toolkit-master\lib\ZLib\zlib.net.dll</HintPath>
+    <Reference Include="zlib.net, Version=1.0.3.0, Culture=neutral, PublicKeyToken=47d7877cb3620160">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>libs\ZLib\zlib.net.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

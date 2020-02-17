@@ -35,8 +35,7 @@ namespace Play_Tabs.Tools
         {
             var psarc = new PlayStationArchive();
             psarc.Read(inputStream, true);
-            SongObject newSong = new SongObject();
-            newSong.source = archivePath;
+            SongObject newSong = new SongObject(archivePath);
 
             try
             {
@@ -138,23 +137,6 @@ namespace Play_Tabs.Tools
                 }
             }
             return null;
-        }
-    }
-
-    public struct SongObject
-    {
-        public string album;
-        public string artist;
-        public float length;
-        public string title;
-        public string year;
-        public sbyte[] tuningLead;
-        public sbyte[] tuningRhythm;
-        public string source;
-
-        public string GetLength()
-        {
-            return TimeSpan.FromSeconds(length).ToString(@"mm\:ss");
         }
     }
 }
