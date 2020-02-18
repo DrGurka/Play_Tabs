@@ -15,6 +15,9 @@ namespace Play_Tabs.Tools
         public static List<SongObject> songObjects = new List<SongObject>();
         private const string CONTENT_PATH = "Custom Songs";
 
+        /// <summary>
+        /// Load all the songs from our songs folder into an list of <c>SongObject</c>
+        /// </summary>
         public static void Initialize()
         {
 

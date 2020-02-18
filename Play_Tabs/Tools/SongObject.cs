@@ -32,11 +32,17 @@ namespace Play_Tabs.Tools
             this.source = source;
         }
 
+        /// <summary>
+        /// Returns the length of the song in the format of mm\:ss
+        /// </summary>
         public string GetLength()
         {
             return TimeSpan.FromSeconds(length).ToString(@"mm\:ss");
         }
 
+        /// <summary>
+        /// Loads all the chords and notes for the arrangement
+        /// </summary>
         public ArrangementObject LoadArrangement(Arrangement arrangment)
         {
             XmlDocument document = new XmlDocument();
@@ -124,15 +130,55 @@ namespace Play_Tabs.Tools
 
     public struct chord
     {
+
+        /// <summary>
+        /// An array of every note in the chord
+        /// </summary>
         public readonly note[] chordNotes;
+
+        /// <summary>
+        /// The time when the chord is played
+        /// </summary>
         public readonly float time;
+
+        /// <summary>
+        /// If the chord is linked to the next chord
+        /// </summary>
         public readonly bool linkNext;
+
+        /// <summary>
+        /// Is the chord is accented
+        /// </summary>
         public readonly bool accent;
+
+        /// <summary>
+        /// Is the chord fret hand muted
+        /// /// </summary>
         public readonly bool fretHandMute;
+
+        /// <summary>
+        /// ???
+        /// </summary>
         public readonly bool highDensity;
+
+        /// <summary>
+        /// ???
+        /// </summary>
         public readonly bool ignore;
+
+        /// <summary>
+        /// Is the chord palm muted
+        /// </summary>
         public readonly bool palmMute;
+
+        /// <summary>
+        /// ???
+        /// </summary>
         public readonly bool hopo;
+
+        /// <summary>
+        /// Do you strum down on the chord = false, up = true
+        /// </summary>
         public readonly bool strumDown;
 
         public chord(XmlNode node)
@@ -161,31 +207,111 @@ namespace Play_Tabs.Tools
 
     public struct note
     {
+
+        /// <summary>
+        /// The time when the note is played
+        /// </summary>
         public readonly float time;
+
+        /// <summary>
+        /// Is the note linked to the next note
+        /// </summary>
         public readonly bool linkNext;
+
         public readonly bool accent;
+
+        /// <summary>
+        /// Do you bend the note
+        /// </summary>
         public readonly bool bend;
+
+        /// <summary>
+        /// An array of all the bend values, i.e step and time of step change
+        /// </summary>
         public readonly bendValue[] bendValues;
+
+        /// <summary>
+        /// Which fret the note is on
+        /// </summary>
         public readonly byte fret;
+
         public readonly bool hammerOn;
+
         public readonly bool harmonic;
-        public readonly bool hopo; //??
-        public readonly bool ignore; //??
+
+        /// <summary>
+        /// ???
+        /// </summary>
+        public readonly bool hopo;
+
+        /// <summary>
+        /// ???
+        /// </summary>
+        public readonly bool ignore;
+
+        /// <summary>
+        /// The finger to play this note with on the left hand
+        /// </summary>
         public readonly sbyte leftHand; //This number represents which finger to place on this note
+
+        /// <summary>
+        /// Is the note muted (left hand)
+        /// </summary>
         public readonly bool mute;
+
+        /// <summary>
+        /// Is the note palm muted (right hand)
+        /// </summary>
         public readonly bool palmMute;
-        public readonly sbyte pluck; //??
+
+        /// <summary>
+        /// ???
+        /// </summary>
+        public readonly sbyte pluck;
+
         public readonly bool pullOff;
-        public readonly sbyte slap; //??
+
+        /// <summary>
+        /// ???
+        /// </summary>
+        public readonly sbyte slap;
+
+        /// <summary>
+        /// The fret to slide to
+        /// </summary>
         public readonly sbyte slideTo;
+
         public readonly byte guitarString;
+
+        /// <summary>
+        /// How long sustain the note has in seconds
+        /// </summary>
         public readonly float sustain;
+
         public readonly bool tremolo;
+
         public readonly bool harmonicPinch;
-        public readonly bool pickDirection; //??
-        public readonly sbyte rightHand; //??
-        public readonly sbyte slideUnpitchTo; //??
+
+        /// <summary>
+        /// ???
+        /// </summary>
+        public readonly bool pickDirection;
+
+        /// <summary>
+        /// ???
+        /// </summary>
+        public readonly sbyte rightHand;
+
+        /// <summary>
+        /// ???
+        /// </summary>
+        public readonly sbyte slideUnpitchTo;
+
         public readonly bool tap;
+
+        /// <summary>
+        /// ???
+        /// </summary>
         public readonly short vibrato;
 
         public note(XmlNode node)
@@ -233,7 +359,14 @@ namespace Play_Tabs.Tools
 
     public struct bendValue
     {
+
+        /// <summary>
+        /// The time this bend value starts
+        /// </summary>
         public readonly float time;
+        /// <summary>
+        /// How many steps are we bending
+        /// </summary>
         public readonly float step;
 
         public bendValue(float time, float step)
