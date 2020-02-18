@@ -12,6 +12,8 @@ namespace Play_Tabs
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        Scene scene;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -27,6 +29,7 @@ namespace Play_Tabs
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            scene = new Scene(GraphicsDevice);
 
             base.Initialize();
         }
@@ -39,6 +42,8 @@ namespace Play_Tabs
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            scene.LoadContent(Content);
+            
 
             // TODO: use this.Content to load your game content here
         }
@@ -62,6 +67,8 @@ namespace Play_Tabs
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            scene.Update(gameTime);
+
             // TODO: Add your update logic here
 
             base.Update(gameTime);
@@ -74,6 +81,8 @@ namespace Play_Tabs
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
+
+            scene.Draw(spriteBatch);
 
             // TODO: Add your drawing code here
 
