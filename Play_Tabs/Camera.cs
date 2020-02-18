@@ -30,34 +30,34 @@ namespace Play_Tabs
 
         public void Update(GameTime gameTime)
         {
-            if (Keyboard.GetState().IsKeyDown(Keys.A))
-            {
-                position.X += 1f;
-                target.X += 1f;
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.D))
-            {
-                position.X -= 1f;
-                target.X -= 1f;
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.W))
-            {
-                position.Y += 1f;
-                target.Y += 1f;
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.S))
-            {
-                position.Y -= 1f;
-                target.Y -= 1f;
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.OemPlus))
-            {
-                position.Z += 1f;
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.OemMinus))
-            {
-                position.Z -= 1f;
-            }
+            //if (Keyboard.GetState().IsKeyDown(Keys.Left))
+            //{
+            //    position.X += 1f;
+            //    target.X += 1f;
+            //}
+            //if (Keyboard.GetState().IsKeyDown(Keys.Right))
+            //{
+            //    position.X -= 1f;
+            //    target.X -= 1f;
+            //}
+            //if (Keyboard.GetState().IsKeyDown(Keys.Up))
+            //{
+            //    position.Y += 1f;
+            //    target.Y += 1f;
+            //}
+            //if (Keyboard.GetState().IsKeyDown(Keys.Down))
+            //{
+            //    position.Y -= 1f;
+            //    target.Y -= 1f;
+            //}
+            //if (Keyboard.GetState().IsKeyDown(Keys.OemPlus))
+            //{
+            //    position.Z += 1f;
+            //}
+            //if (Keyboard.GetState().IsKeyDown(Keys.OemMinus))
+            //{
+            //    position.Z -= 1f;
+            //}
 
             viewMatrix = Matrix.CreateLookAt(position, target, Vector3.Up);
         }

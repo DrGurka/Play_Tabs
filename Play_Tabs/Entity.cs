@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace Play_Tabs
 {
@@ -28,6 +29,30 @@ namespace Play_Tabs
 
         public virtual void Update(GameTime gameTime)
         {
+            if (Keyboard.GetState().IsKeyDown(Keys.A))
+            {
+                position.X += 1f;
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.D))
+            {
+                position.X -= 1f;
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.W))
+            {
+                position.Y += 1f;
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.S))
+            {
+                position.Y -= 1f;
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.OemPlus))
+            {
+                position.Z += 1f;
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.OemMinus))
+            {
+                position.Z -= 1f;
+            }
         }
 
 
