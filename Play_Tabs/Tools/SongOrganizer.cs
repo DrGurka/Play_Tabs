@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using SpotifyAPI.Web;
+using SpotifyAPI.Web.Auth;
+using SpotifyAPI.Web.Models;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Play_Tabs.Tools
 {
@@ -14,27 +18,36 @@ namespace Play_Tabs.Tools
 
         public static List<SongObject> songObjects = new List<SongObject>();
         private const string CONTENT_PATH = "Custom Songs";
+        private static SpotifyWebAPI spotify;
 
         /// <summary>
         /// Load all the songs from our songs folder into an list of <c>SongObject</c>
         /// </summary>
-        public static void Initialize()
+        public async static void Initialize(GraphicsDevice graphics)
         {
 
             if(!Directory.Exists(CONTENT_PATH)) {
                 Directory.CreateDirectory(CONTENT_PATH);
             }
 
-            foreach(string song in Directory.EnumerateFiles(CONTENT_PATH, "*_p.psarc", SearchOption.AllDirectories))
+            CredentialsAuth auth = new CredentialsAuth("e1c3ce28971a4396bd46eba97d14c271", "951448c26c5544ce8af238bdda3277d8");
+            Token token = await auth.GetToken();
+            spotify = new SpotifyWebAPI()
+            {
+                AccessToken = token.AccessToken,
+                TokenType = token.TokenType
+            };
+
+            foreach (string song in Directory.EnumerateFiles(CONTENT_PATH, "*_p.psarc", SearchOption.AllDirectories))
             {
                 using(var inputStream = File.OpenRead(song))
                 {
-                    songObjects.Add(UnpackArchive(song, inputStream));
+                    songObjects.Add(UnpackArchive(song, inputStream, graphics));
                 }
             }
         }
 
-        private static SongObject UnpackArchive(string archivePath, Stream inputStream)
+        private static SongObject UnpackArchive(string archivePath, Stream inputStream, GraphicsDevice graphics)
         {
             var psarc = new PlayStationArchive();
             psarc.Read(inputStream, true);
@@ -124,6 +137,7 @@ namespace Play_Tabs.Tools
                 }
             }
 
+            newSong.GetSpotifyData(spotify, graphics);
             return newSong;
         }
 

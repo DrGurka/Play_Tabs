@@ -13,31 +13,32 @@ namespace Play_Tabs
     class Scene
     {
         List<Entity> entities = new List<Entity>();
-        SpriteFont font;
-        Camera camera;
 
-
-
-
-        Vector2 textPos = Vector2.Zero;
+        public Camera camera;
+        public Dictionary<string, Model> modelList;
+        private MenuHandle menuHandle;
 
         public Scene(GraphicsDevice graphicsDevice)
         {
             camera = new Camera(graphicsDevice);
-            SongOrganizer.Initialize();
-            SongOrganizer.songObjects.Add(new SongObject("") {title ="Roundabout", album = "Fragile", artist = "Yes", length = 300, tuningLead = new sbyte[6], tuningRhythm = new sbyte[6], year = "1979" });
-            SongOrganizer.songObjects[0].GetLength();
+            modelList = new Dictionary<string, Model>();
+            menuHandle = new MenuHandle(graphicsDevice);
         }
 
         public void LoadContent(ContentManager Content)
         {
-            entities.Add(new Entity(0, camera, Content.Load<Model>("MonoCube"), new Vector3(0, 0, 0)));
-            font = Content.Load<SpriteFont>("font");
+
+            modelList.Add("MonoCube", Content.Load<Model>("MonoCube"));
+
+            entities.Add(new Entity(0, camera, modelList["MonoCube"], new Vector3(0, 0, 0)));
+
+            menuHandle.LoadContent(Content);
         }
 
         public void Update(GameTime gameTime)
         {
             camera.Update(gameTime);
+            menuHandle.Update(gameTime);
 
             foreach (Entity entity in entities)
             {
@@ -53,22 +54,7 @@ namespace Play_Tabs
             }
 
             spriteBatch.Begin();
-            textPos = Vector2.Zero;
-            foreach (SongObject song in SongOrganizer.songObjects)
-            {
-                spriteBatch.DrawString(font, "Title: " + song.title, textPos, Color.White);
-                //textPos.Y += 20;
-                textPos.X += 200;
-                spriteBatch.DrawString(font, "Artist: " + song.artist, textPos, Color.White);
-                textPos.Y += 20;
-                textPos.X = 0;
-                spriteBatch.DrawString(font, "Album: " + song.album, textPos, Color.White);
-                textPos.Y += 20;
-                spriteBatch.DrawString(font, "Length: " + song.GetLength(), textPos, Color.White);
-                textPos.Y += 20;
-                spriteBatch.DrawString(font, "Year: " + song.year, textPos, Color.White);
-                textPos.Y += 20;
-            }
+            menuHandle.Draw(spriteBatch);
             spriteBatch.End();
         }
 
