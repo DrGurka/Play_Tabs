@@ -19,6 +19,7 @@ namespace Play_Tabs.Tools
         public static List<SongObject> songObjects = new List<SongObject>();
         private const string CONTENT_PATH = "Custom Songs";
         private static SpotifyWebAPI spotify;
+        public static Dictionary<string, AlbumImage> albumImages = new Dictionary<string, AlbumImage>();
 
         /// <summary>
         /// Load all the songs from our songs folder into an list of <c>SongObject</c>
@@ -137,9 +138,13 @@ namespace Play_Tabs.Tools
                 }
             }
 
-            newSong.GetSpotifyData(spotify, graphics);
+            if (!albumImages.ContainsKey(newSong.artist + "+" + newSong.album)) {
+                albumImages.Add(newSong.album + newSong.artist, new AlbumImage(spotify, newSong.artist + "+" + newSong.album, graphics));
+            }
             return newSong;
         }
+
+        
 
         private static JContainer FindArrangment(string arrangment, JProperty property)
         {
