@@ -28,7 +28,7 @@ namespace Play_Tabs
 
             SongOrganizer.Initialize(graphicsDevice);
 
-            //Test
+            #region Test
             SongOrganizer.songObjects.Add(new SongObject("") { title = "Roundabout", album = "Fragile", artist = "Yes", length = 300, tuningLead = new sbyte[6], tuningRhythm = new sbyte[6], year = "1979" });
             SongOrganizer.songObjects.Add(new SongObject("") { title = "Africa", album = "Toto IV", artist = "Toto", length = 180, tuningLead = new sbyte[6], tuningRhythm = new sbyte[6], year = "1576" });
             SongOrganizer.songObjects.Add(new SongObject("") { title = "Roundabout2", album = "Fragile", artist = "Yes", length = 300, tuningLead = new sbyte[6], tuningRhythm = new sbyte[6], year = "1979" });
@@ -50,6 +50,7 @@ namespace Play_Tabs
             };
             SongOrganizer.albumImages.Add("Yes+Fragile", new AlbumImage(spotify, "Yes+Fragile", graphicsDevice));
             SongOrganizer.albumImages.Add("Toto+Toto IV", new AlbumImage(spotify, "Toto+Toto IV", graphicsDevice));
+            #endregion
         }
 
         public void LoadContent(ContentManager Content)
@@ -65,34 +66,38 @@ namespace Play_Tabs
         
         float target = 10;
         float distance;
+        
         public void Draw(SpriteBatch spriteBatch)
         {
             int index = 0;
             distance += (target - distance) * 0.125f;
             Vector2 windowCenter = spriteBatch.GraphicsDevice.Viewport.Bounds.Size.ToVector2() / 2f;
+            byte maxContainersVert = (byte)(windowCenter.Y / 128);
+            int alignCenter = (int)(windowCenter.Y - 64) - Math.Max((maxContainersVert - cursorIndex) * 128, 0) + Math.Max(cursorIndex - (SongOrganizer.songObjects.Count - 1 - maxContainersVert), 0) * 128;
+
             foreach(SongObject song in SongOrganizer.songObjects)
             {
                 //If the selection cursor is at the current index, highlight this song
                 if (cursorIndex == index)
                 {
                     //Song selection container
-                    spriteBatch.Draw(rectangle, new Rectangle((int)((windowCenter.X - 640) + distance), 32 + (index * 128), 720, 128), null, Color.Black * 0.8f, 0.0f, Vector2.Zero, SpriteEffects.None, 0.0f);
+                    spriteBatch.Draw(rectangle, new Rectangle((int)((windowCenter.X - 640) + distance), alignCenter + (index * 128 - cursorIndex * 128), 720, 128), null, Color.Black * 0.8f, 0.0f, Vector2.Zero, SpriteEffects.None, 0.0f);
 
                     //Detailed song info container
-                    spriteBatch.Draw(rectangle, new Rectangle((int)((windowCenter.X - 640) + distance), 32 + (index * 128), 128, 128), null, Color.Black * 0.8f, 0.0f, Vector2.Zero, SpriteEffects.None, 0.1f);
-                    spriteBatch.DrawString(fontBold, song.title, new Vector2(windowCenter.X - 496 + distance, 48 + (index * 128)), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
-                    spriteBatch.DrawString(fontRegular, song.artist, new Vector2(windowCenter.X - 496 + distance, 96 + (index * 128)), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
+                    song.DrawCoverArt(spriteBatch, new Vector2(windowCenter.X - 640 + distance, alignCenter + (index * 128 - cursorIndex * 128)), false, 0.2f);
+                    spriteBatch.DrawString(fontBold, song.title, new Vector2(windowCenter.X - 496 + distance, alignCenter + 16 + (index * 128 - cursorIndex * 128)), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
+                    spriteBatch.DrawString(fontRegular, song.artist, new Vector2(windowCenter.X - 496 + distance, alignCenter + 64 + (index * 128 - cursorIndex * 128)), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
                 }
 
                 else
                 {
                     //Song selection container
-                    spriteBatch.Draw(rectangle, new Rectangle((int)(windowCenter.X - 640), 32 + (index * 128), 720, 128), null, Color.Black * 0.5f, 0.0f, Vector2.Zero, SpriteEffects.None, 0.0f);
+                    spriteBatch.Draw(rectangle, new Rectangle((int)(windowCenter.X - 640), alignCenter + (index * 128 - cursorIndex * 128), 720, 128), null, Color.Black * 0.5f, 0.0f, Vector2.Zero, SpriteEffects.None, 0.0f);
                     
                     //Detailed song info container
-                    spriteBatch.Draw(rectangle, new Rectangle((int)(windowCenter.X - 640), 32 + (index * 128), 128, 128), null, Color.Black * 0.5f, 0.0f, Vector2.Zero, SpriteEffects.None, 0.1f);
-                    spriteBatch.DrawString(fontBold, song.title, new Vector2(windowCenter.X - 496, 48 + (index * 128)), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
-                    spriteBatch.DrawString(fontRegular, song.artist, new Vector2(windowCenter.X - 496, 96 + (index * 128)), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
+                    song.DrawCoverArt(spriteBatch, new Vector2(windowCenter.X - 640, alignCenter + (index * 128 - cursorIndex * 128)), false, 0.2f);
+                    spriteBatch.DrawString(fontBold, song.title, new Vector2(windowCenter.X - 496, alignCenter + 16 + (index * 128 - cursorIndex * 128)), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
+                    spriteBatch.DrawString(fontRegular, song.artist, new Vector2(windowCenter.X - 496, alignCenter + 64 + (index * 128 - cursorIndex * 128)), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
                 }
                 index++;
             }
