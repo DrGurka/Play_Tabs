@@ -10,6 +10,8 @@ using SpotifyAPI.Web;
 using SpotifyAPI.Web.Enums;
 using System.Net;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
+using SpotifyAPI.Web.Models;
 
 namespace Play_Tabs.Tools
 {
@@ -23,30 +25,40 @@ namespace Play_Tabs.Tools
     public class AlbumImage
     {
         public Texture2D image;
-        private GraphicsDevice graphics;
         public bool isLoaded;
 
-        public AlbumImage(string url, GraphicsDevice graphics)
+        public AlbumImage(SpotifyWebAPI spotify, string searchKey, GraphicsDevice graphics)
         {
-            LoadImage(url);
-            this.graphics = graphics;
+            LoadImage(spotify, searchKey, graphics);
         }
 
-        public void LoadImage(string url)
+        public async void LoadImage(SpotifyWebAPI spotify, string searchKey, GraphicsDevice graphics)
         {
 
-            WebClient client = new WebClient();
-            Uri imageUrl = new Uri(url);
-            client.OpenReadCompleted += OnImageLoaded;
-            client.OpenReadAsync(imageUrl);
+            SearchItem search = await spotify.SearchItemsAsync(searchKey, SearchType.Track, 1);
+            if (search.Tracks.Items.Count > 0)
+            {
+                foreach (Image image in search.Tracks.Items[0].Album.Images)
+                {
+                    if (image.Height == 300)
+                    {
+                        WebClient client = new WebClient();
+                        Uri imageUrl = new Uri(image.Url);
+                        client.OpenReadCompleted += new OpenReadCompletedEventHandler((sender, e) => OnImageLoaded(e, graphics, client));
+                        client.OpenReadAsync(imageUrl);
+                    }
+                }
+            }
         }
 
-        private void OnImageLoaded(object sender, OpenReadCompletedEventArgs eventArgs)
+        private void OnImageLoaded(OpenReadCompletedEventArgs eventArgs, GraphicsDevice graphics, WebClient client)
         {
 
-            image = Texture2D.FromStream(graphics, eventArgs.Result);
-            graphics = null;
-            isLoaded = true;
+            if (eventArgs.Error == null) {
+                image = Texture2D.FromStream(graphics, eventArgs.Result);
+                isLoaded = true;
+            }
+            client.Dispose();
         }
     }
 
@@ -60,26 +72,18 @@ namespace Play_Tabs.Tools
         public sbyte[] tuningLead;
         public sbyte[] tuningRhythm;
         public string source;
-        public List<AlbumImage> images;
-        public bool isLoaded;
 
         public SongObject(string source)
         {
             this.source = source;
-            images = new List<AlbumImage>();
         }
 
-        public async void GetSpotifyData(SpotifyWebAPI spotify, GraphicsDevice graphics)
+        public void DrawCoverArt(SpriteBatch spriteBatch, Vector2 position, bool bigImage, float layer)
         {
-            SpotifyAPI.Web.Models.SearchItem search = await spotify.SearchItemsAsync(artist + "+" + title, SearchType.Track, 1);
-            if(search.Tracks.Items.Count > 0)
+            if (SongOrganizer.albumImages.ContainsKey(artist + "+" + album) && SongOrganizer.albumImages[artist + "+" + album].isLoaded)
             {
-                foreach(SpotifyAPI.Web.Models.Image image in search.Tracks.Items[0].Album.Images)
-                {
-                    images.Add(new AlbumImage(image.Url, graphics));
-                }
+                spriteBatch.Draw(SongOrganizer.albumImages[artist + "+" + album].image, new Rectangle(position.ToPoint(), new Point(bigImage ? 300 : 128, bigImage ? 300 : 128)), null, Color.White, 0.0f, Vector2.Zero, SpriteEffects.None, layer);
             }
-            isLoaded = true;
         }
 
         /// <summary>

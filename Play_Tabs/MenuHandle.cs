@@ -8,6 +8,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Play_Tabs.Tools;
 using Microsoft.Xna.Framework.Input;
+using SpotifyAPI.Web;
+using SpotifyAPI.Web.Auth;
+using SpotifyAPI.Web.Models;
 
 namespace Play_Tabs
 {
@@ -36,6 +39,17 @@ namespace Play_Tabs
             SongOrganizer.songObjects.Add(new SongObject("") { title = "Africa4", album = "Toto IV", artist = "Toto", length = 180, tuningLead = new sbyte[6], tuningRhythm = new sbyte[6], year = "1576" });
             SongOrganizer.songObjects.Add(new SongObject("") { title = "Roundabout5", album = "Fragile", artist = "Yes", length = 300, tuningLead = new sbyte[6], tuningRhythm = new sbyte[6], year = "1979" });
             SongOrganizer.songObjects.Add(new SongObject("") { title = "Africa5", album = "Toto IV", artist = "Toto", length = 180, tuningLead = new sbyte[6], tuningRhythm = new sbyte[6], year = "1576" });
+
+
+            CredentialsAuth auth = new CredentialsAuth("e1c3ce28971a4396bd46eba97d14c271", "951448c26c5544ce8af238bdda3277d8");
+            Token token = Task.Run(() => auth.GetToken()).Result;
+            SpotifyWebAPI spotify = new SpotifyWebAPI()
+            {
+                AccessToken = token.AccessToken,
+                TokenType = token.TokenType
+            };
+            SongOrganizer.albumImages.Add("Yes+Fragile", new AlbumImage(spotify, "Yes+Fragile", graphicsDevice));
+            SongOrganizer.albumImages.Add("Toto+Toto IV", new AlbumImage(spotify, "Toto+Toto IV", graphicsDevice));
         }
 
         public void LoadContent(ContentManager Content)
@@ -88,15 +102,13 @@ namespace Play_Tabs
             if (SongOrganizer.songObjects.Count > 0)
             {
                 SongObject currentSong = SongOrganizer.songObjects[cursorIndex];
-                if (currentSong.isLoaded && currentSong.images[0].isLoaded) {
-                    spriteBatch.Draw(currentSong.images[0].image, new Vector2((int)(windowCenter.X + 96), 32), null, Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.1f);
-                }
-                spriteBatch.DrawString(fontRegular, "SONG INFO", new Vector2((int)(windowCenter.X + 96) + 16, 32 + 300 + 16), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
-                spriteBatch.DrawString(fontRegular, "Artist: " + currentSong.artist, new Vector2((int)(windowCenter.X + 96) + 16, 32 + 300 + 16 + 64), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
-                spriteBatch.DrawString(fontRegular, "Album: " + currentSong.album, new Vector2((int)(windowCenter.X + 96) + 16, 32 + 300 + 16 + 96), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
-                spriteBatch.DrawString(fontRegular, "Year: " + currentSong.year, new Vector2((int)(windowCenter.X + 96) + 16, 32 + 300 + 16 + 128), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
-                spriteBatch.DrawString(fontRegular, "Title: " + currentSong.title, new Vector2((int)(windowCenter.X + 96) + 16, 32 + 300 + 16 + 160), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
-                spriteBatch.DrawString(fontRegular, "Length: " + currentSong.GetLength(), new Vector2((int)(windowCenter.X + 96) + 16, 32 + 300 + 16 + 192), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
+                currentSong.DrawCoverArt(spriteBatch, new Vector2(windowCenter.X + 96, 32), true, 0.3f);
+                spriteBatch.DrawString(font, "SONG INFO", new Vector2((int)(windowCenter.X + 96) + 16, 32 + 300 + 16), Color.White, 0.0f, Vector2.Zero, 2.0f, SpriteEffects.None, 0.2f);
+                spriteBatch.DrawString(font, "Artist: " + currentSong.artist, new Vector2((int)(windowCenter.X + 96) + 16, 32 + 300 + 16 + 64), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
+                spriteBatch.DrawString(font, "Album: " + currentSong.album, new Vector2((int)(windowCenter.X + 96) + 16, 32 + 300 + 16 + 96), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
+                spriteBatch.DrawString(font, "Year: " + currentSong.year, new Vector2((int)(windowCenter.X + 96) + 16, 32 + 300 + 16 + 128), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
+                spriteBatch.DrawString(font, "Title: " + currentSong.title, new Vector2((int)(windowCenter.X + 96) + 16, 32 + 300 + 16 + 160), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
+                spriteBatch.DrawString(font, "Length: " + currentSong.GetLength(), new Vector2((int)(windowCenter.X + 96) + 16, 32 + 300 + 16 + 192), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
             }
         }
 
