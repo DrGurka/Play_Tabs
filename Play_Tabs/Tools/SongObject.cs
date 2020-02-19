@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.IO;
 using System.Globalization;
+using SpotifyAPI.Web;
+using SpotifyAPI.Web.Enums;
+using System.Net;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Play_Tabs.Tools
 {
@@ -14,6 +18,36 @@ namespace Play_Tabs.Tools
     {
         lead,
         rythm
+    }
+
+    public class AlbumImage
+    {
+        public Texture2D image;
+        private GraphicsDevice graphics;
+        public bool isLoaded;
+
+        public AlbumImage(string url, GraphicsDevice graphics)
+        {
+            LoadImage(url);
+            this.graphics = graphics;
+        }
+
+        public void LoadImage(string url)
+        {
+
+            WebClient client = new WebClient();
+            Uri imageUrl = new Uri(url);
+            client.OpenReadCompleted += OnImageLoaded;
+            client.OpenReadAsync(imageUrl);
+        }
+
+        private void OnImageLoaded(object sender, OpenReadCompletedEventArgs eventArgs)
+        {
+
+            image = Texture2D.FromStream(graphics, eventArgs.Result);
+            graphics = null;
+            isLoaded = true;
+        }
     }
 
     public class SongObject
@@ -26,10 +60,26 @@ namespace Play_Tabs.Tools
         public sbyte[] tuningLead;
         public sbyte[] tuningRhythm;
         public string source;
+        public List<AlbumImage> images;
+        public bool isLoaded;
 
         public SongObject(string source)
         {
             this.source = source;
+            images = new List<AlbumImage>();
+        }
+
+        public async void GetSpotifyData(SpotifyWebAPI spotify, GraphicsDevice graphics)
+        {
+            SpotifyAPI.Web.Models.SearchItem search = await spotify.SearchItemsAsync(artist + "+" + title, SearchType.Track, 1);
+            if(search.Tracks.Items.Count > 0)
+            {
+                foreach(SpotifyAPI.Web.Models.Image image in search.Tracks.Items[0].Album.Images)
+                {
+                    images.Add(new AlbumImage(image.Url, graphics));
+                }
+            }
+            isLoaded = true;
         }
 
         /// <summary>

@@ -16,7 +16,11 @@ namespace Play_Tabs
 
         public Game1()
         {
-            graphics = new GraphicsDeviceManager(this);
+            graphics = new GraphicsDeviceManager(this)
+            {
+                PreferredBackBufferWidth = 1280,
+                PreferredBackBufferHeight = 720
+            };
             Content.RootDirectory = "Content";
         }
 
