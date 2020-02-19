@@ -13,12 +13,25 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin font.spritefont
+#begin Fonts/Gravity-Bold.otf
+/copy:Fonts/Gravity-Bold.otf
+
+#begin Fonts/Gravity-Bold.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
-/build:font.spritefont
+/build:Fonts/Gravity-Bold.spritefont
+
+#begin Fonts/Gravity-Regular.otf
+/copy:Fonts/Gravity-Regular.otf
+
+#begin Fonts/Gravity-Regular.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/Gravity-Regular.spritefont
 
 #begin MonoCube.dae
 /importer:FbxImporter

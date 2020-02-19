@@ -14,7 +14,8 @@ namespace Play_Tabs
     class MenuHandle
     {
         private Texture2D rectangle;
-        private SpriteFont font;
+        private SpriteFont fontRegular;
+        private SpriteFont fontBold;
         private short cursorIndex;
 
         public MenuHandle(GraphicsDevice graphicsDevice)
@@ -39,7 +40,8 @@ namespace Play_Tabs
 
         public void LoadContent(ContentManager Content)
         {
-            font = Content.Load<SpriteFont>("font");
+            fontRegular = Content.Load<SpriteFont>("Fonts/Gravity-Regular");
+            fontBold = Content.Load<SpriteFont>("Fonts/Gravity-Bold");
         }
 
         public void Update(GameTime gameTime)
@@ -64,8 +66,8 @@ namespace Play_Tabs
 
                     //Detailed song info container
                     spriteBatch.Draw(rectangle, new Rectangle((int)((windowCenter.X - 640) + distance), 32 + (index * 128), 128, 128), null, Color.Black * 0.8f, 0.0f, Vector2.Zero, SpriteEffects.None, 0.1f);
-                    spriteBatch.DrawString(font, song.title, new Vector2(windowCenter.X - 496 + distance, 48 + (index * 128)), Color.White, 0.0f, Vector2.Zero, 2.0f, SpriteEffects.None, 0.2f);
-                    spriteBatch.DrawString(font, song.artist, new Vector2(windowCenter.X - 496 + distance, 96 + (index * 128)), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
+                    spriteBatch.DrawString(fontBold, song.title, new Vector2(windowCenter.X - 496 + distance, 48 + (index * 128)), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
+                    spriteBatch.DrawString(fontRegular, song.artist, new Vector2(windowCenter.X - 496 + distance, 96 + (index * 128)), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
                 }
 
                 else
@@ -75,8 +77,8 @@ namespace Play_Tabs
                     
                     //Detailed song info container
                     spriteBatch.Draw(rectangle, new Rectangle((int)(windowCenter.X - 640), 32 + (index * 128), 128, 128), null, Color.Black * 0.5f, 0.0f, Vector2.Zero, SpriteEffects.None, 0.1f);
-                    spriteBatch.DrawString(font, song.title, new Vector2(windowCenter.X - 496, 48 + (index * 128)), Color.White, 0.0f, Vector2.Zero, 2.0f, SpriteEffects.None, 0.2f);
-                    spriteBatch.DrawString(font, song.artist, new Vector2(windowCenter.X - 496, 96 + (index * 128)), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
+                    spriteBatch.DrawString(fontBold, song.title, new Vector2(windowCenter.X - 496, 48 + (index * 128)), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
+                    spriteBatch.DrawString(fontRegular, song.artist, new Vector2(windowCenter.X - 496, 96 + (index * 128)), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
                 }
                 index++;
             }
@@ -89,12 +91,12 @@ namespace Play_Tabs
                 if (currentSong.isLoaded && currentSong.images[0].isLoaded) {
                     spriteBatch.Draw(currentSong.images[0].image, new Vector2((int)(windowCenter.X + 96), 32), null, Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.1f);
                 }
-                spriteBatch.DrawString(font, "SONG INFO", new Vector2((int)(windowCenter.X + 96) + 16, 32 + 300 + 16), Color.White, 0.0f, Vector2.Zero, 2.0f, SpriteEffects.None, 0.2f);
-                spriteBatch.DrawString(font, "Artist: " + currentSong.artist, new Vector2((int)(windowCenter.X + 96) + 16, 32 + 300 + 16 + 64), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
-                spriteBatch.DrawString(font, "Album: " + currentSong.album, new Vector2((int)(windowCenter.X + 96) + 16, 32 + 300 + 16 + 96), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
-                spriteBatch.DrawString(font, "Year: " + currentSong.year, new Vector2((int)(windowCenter.X + 96) + 16, 32 + 300 + 16 + 128), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
-                spriteBatch.DrawString(font, "Title: " + currentSong.title, new Vector2((int)(windowCenter.X + 96) + 16, 32 + 300 + 16 + 160), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
-                spriteBatch.DrawString(font, "Length: " + currentSong.GetLength(), new Vector2((int)(windowCenter.X + 96) + 16, 32 + 300 + 16 + 192), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
+                spriteBatch.DrawString(fontRegular, "SONG INFO", new Vector2((int)(windowCenter.X + 96) + 16, 32 + 300 + 16), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
+                spriteBatch.DrawString(fontRegular, "Artist: " + currentSong.artist, new Vector2((int)(windowCenter.X + 96) + 16, 32 + 300 + 16 + 64), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
+                spriteBatch.DrawString(fontRegular, "Album: " + currentSong.album, new Vector2((int)(windowCenter.X + 96) + 16, 32 + 300 + 16 + 96), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
+                spriteBatch.DrawString(fontRegular, "Year: " + currentSong.year, new Vector2((int)(windowCenter.X + 96) + 16, 32 + 300 + 16 + 128), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
+                spriteBatch.DrawString(fontRegular, "Title: " + currentSong.title, new Vector2((int)(windowCenter.X + 96) + 16, 32 + 300 + 16 + 160), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
+                spriteBatch.DrawString(fontRegular, "Length: " + currentSong.GetLength(), new Vector2((int)(windowCenter.X + 96) + 16, 32 + 300 + 16 + 192), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
             }
         }
 
