@@ -14,6 +14,7 @@ namespace Play_Tabs
     {
         List<Entity> entities = new List<Entity>();
         SpriteFont font;
+        Texture2D songContainer;
         Camera camera;
 
 
@@ -33,6 +34,7 @@ namespace Play_Tabs
         {
             entities.Add(new Entity(0, camera, Content.Load<Model>("MonoCube"), new Vector3(0, 0, 0)));
             font = Content.Load<SpriteFont>("font");
+            songContainer = Content.Load<Texture2D>("SongContainer");
         }
 
         public void Update(GameTime gameTime)
@@ -56,18 +58,21 @@ namespace Play_Tabs
             textPos = Vector2.Zero;
             foreach (SongObject song in SongOrganizer.songObjects)
             {
+                spriteBatch.Draw(songContainer, textPos, Color.White);
+                textPos.X += 140;
                 spriteBatch.DrawString(font, "Title: " + song.title, textPos, Color.White);
-                //textPos.Y += 20;
-                textPos.X += 200;
+                textPos.Y += 20;
+                
                 spriteBatch.DrawString(font, "Artist: " + song.artist, textPos, Color.White);
-                textPos.Y += 20;
-                textPos.X = 0;
-                spriteBatch.DrawString(font, "Album: " + song.album, textPos, Color.White);
-                textPos.Y += 20;
+                //textPos.Y += 20;
+                //textPos.X = 0;
+                //spriteBatch.DrawString(font, "Album: " + song.album, textPos, Color.White);
+
+                textPos.Y = 105;
+                textPos.X = 140;
                 spriteBatch.DrawString(font, "Length: " + song.GetLength(), textPos, Color.White);
-                textPos.Y += 20;
-                spriteBatch.DrawString(font, "Year: " + song.year, textPos, Color.White);
-                textPos.Y += 20;
+                textPos.X += font.MeasureString("Length: " + song.GetLength()).X + 10;
+                spriteBatch.DrawString(font, "| Year: " + song.year, textPos, Color.White);
             }
             spriteBatch.End();
         }
