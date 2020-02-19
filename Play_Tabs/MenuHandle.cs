@@ -82,6 +82,7 @@ namespace Play_Tabs
                 {
                     //Song selection container
                     spriteBatch.Draw(rectangle, new Rectangle((int)((windowCenter.X - 640) + distance), alignCenter + (index * 128 - cursorIndex * 128), 720, 128), null, Color.Black * 0.8f, 0.0f, Vector2.Zero, SpriteEffects.None, 0.0f);
+                    spriteBatch.Draw(rectangle, new Rectangle((int)(windowCenter.X - 640), alignCenter + (index * 128 - cursorIndex * 128), (int)distance, 128), null, new Color(30, 215, 96, 255), 0.0f, Vector2.Zero, SpriteEffects.None, 0.0f); //Green highlight accent (#1DB954)
 
                     //Detailed song info container
                     song.DrawCoverArt(spriteBatch, new Vector2(windowCenter.X - 640 + distance, alignCenter + (index * 128 - cursorIndex * 128)), false, 0.2f);
