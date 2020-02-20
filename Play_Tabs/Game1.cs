@@ -18,9 +18,11 @@ namespace Play_Tabs
         {
             graphics = new GraphicsDeviceManager(this)
             {
-                PreferredBackBufferWidth = 1280,
-                PreferredBackBufferHeight = 720
+                PreferredBackBufferWidth = 1366,
+                PreferredBackBufferHeight = 768
             };
+            Window.IsBorderless = false;
+            Window.Position = Point.Zero;
             Content.RootDirectory = "Content";
         }
 
@@ -34,7 +36,7 @@ namespace Play_Tabs
         {
             // TODO: Add your initialization logic here
             scene = new Scene(GraphicsDevice);
-
+            IsMouseVisible = true;
             base.Initialize();
         }
 
@@ -47,8 +49,6 @@ namespace Play_Tabs
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             scene.LoadContent(Content);
-            
-
             // TODO: use this.Content to load your game content here
         }
 

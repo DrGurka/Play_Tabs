@@ -43,7 +43,10 @@ namespace Play_Tabs.Tools
             {
                 using(var inputStream = File.OpenRead(song))
                 {
-                    songObjects.Add(UnpackArchive(song, inputStream, graphics));
+                    SongObject newSong = UnpackArchive(song, inputStream, graphics);
+                    if (newSong != null) {
+                        songObjects.Add(newSong);
+                    }
                 }
             }
         }
@@ -67,7 +70,12 @@ namespace Play_Tabs.Tools
                             JProperty json = JObject.Parse(reader.ReadToEnd()).Property("Entries");
 
                             JContainer lead = FindArrangment("Lead", json);
-                            JContainer rythm = FindArrangment("Rhythm", json);
+                            JContainer rhythm = FindArrangment("Rhythm", json);
+                            
+                            if(lead == null && rhythm == null) {
+                                newSong = null;
+                                break;
+                            }
 
                             foreach (JProperty property in lead.Values())
                             {
@@ -105,7 +113,7 @@ namespace Play_Tabs.Tools
                                 }
                             }
 
-                            foreach (JProperty property in rythm.Values())
+                            foreach (JProperty property in rhythm.Values())
                             {
                                 if (property.Name.Equals("Tuning"))
                                 {
@@ -138,7 +146,7 @@ namespace Play_Tabs.Tools
                 }
             }
 
-            if (!albumImages.ContainsKey(newSong.artist + "+" + newSong.album)) {
+            if (newSong != null && !albumImages.ContainsKey(newSong.artist + "+" + newSong.album)) {
                 albumImages.Add(newSong.artist + "+" + newSong.album, new AlbumImage(spotify, newSong.artist + "+" + newSong.album, graphics));
             }
             return newSong;

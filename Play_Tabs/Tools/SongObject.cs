@@ -62,6 +62,30 @@ namespace Play_Tabs.Tools
         }
     }
 
+    static class TuningHelper
+    {
+        private readonly static Dictionary<string, sbyte[]> tunings = new Dictionary<string, sbyte[]>()
+        {
+            { "E Standard", new sbyte[] { 0, 0, 0, 0, 0, 0 } },
+            { "Eb Standard", new sbyte[] { -1, -1, -1, -1, -1, -1 } },
+            { "Drop D", new sbyte[] { -2, 0, 0, 0, 0, 0 } },
+            { "D Standard", new sbyte[] { -2, -2, -2, -2, -2, -2 } },
+            { "Drop C", new sbyte[] { -4, -2, -2, -2, -2, -2 } }
+        };
+
+        public static string GetTuning(sbyte[] tuningSteps)
+        {
+            foreach(KeyValuePair<string, sbyte[]> valuePair in tunings)
+            {
+                if(valuePair.Value.SequenceEqual(tuningSteps))
+                {
+                    return valuePair.Key;
+                }
+            }
+            return string.Empty;
+        }
+    }
+
     public class SongObject
     {
         public string album;
@@ -78,11 +102,23 @@ namespace Play_Tabs.Tools
             this.source = source;
         }
 
-        public void DrawCoverArt(SpriteBatch spriteBatch, Vector2 position, bool bigImage, float layer)
+        public void DrawCoverArt(SpriteBatch spriteBatch, Vector2 position, bool bigImage, float alpha, float layer)
         {
             if (SongOrganizer.albumImages.ContainsKey(artist + "+" + album) && SongOrganizer.albumImages[artist + "+" + album].isLoaded)
             {
-                spriteBatch.Draw(SongOrganizer.albumImages[artist + "+" + album].image, new Rectangle(position.ToPoint(), new Point(bigImage ? 300 : 128, bigImage ? 300 : 128)), null, Color.White, 0.0f, Vector2.Zero, SpriteEffects.None, layer);
+                spriteBatch.Draw(SongOrganizer.albumImages[artist + "+" + album].image, new Rectangle(position.ToPoint(), new Point(bigImage ? 300 : 128, bigImage ? 300 : 128)), null, Color.White * alpha, 0.0f, Vector2.Zero, SpriteEffects.None, layer);
+            }
+        }
+
+        public string GetTuning(Arrangement arr)
+        {
+            if(arr == Arrangement.lead)
+            {
+                return TuningHelper.GetTuning(tuningLead);
+            }
+            else
+            {
+                return TuningHelper.GetTuning(tuningRhythm);
             }
         }
 
