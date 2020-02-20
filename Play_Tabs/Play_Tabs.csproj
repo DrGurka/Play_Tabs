@@ -45,6 +45,7 @@
     <Compile Include="Camera.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="Game1.cs" />
+    <Compile Include="GameHandle.cs" />
     <Compile Include="MenuHandle.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

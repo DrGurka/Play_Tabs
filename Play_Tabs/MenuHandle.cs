@@ -76,7 +76,7 @@ namespace Play_Tabs
                     double v = (y / (double)gradient.Height) * 2.0f - 1.0f;
 
                     double here = u * rx + v * ry;
-                    colorData[x + (y * gradient.Width)] = Color.Lerp(startColor, endColor, (float)((start - here) / (start - end)) + (float)random.NextDouble() * 0.1f);
+                    colorData[x + (y * gradient.Width)] = Color.Lerp(startColor, endColor, (float)((start - here) / (start - end)) + (float)random.NextDouble() * 0.05f);
                 }
             }
 
