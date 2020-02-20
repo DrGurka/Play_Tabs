@@ -64,7 +64,7 @@
 /processorParam:TextureFormat=Color
 /build:MonoCubeTexture.png
 
-#begin note.dae
+#begin note.fbx
 /importer:FbxImporter
 /processor:ModelProcessor
 /processorParam:ColorKeyColor=0,0,0,0
@@ -81,7 +81,7 @@
 /processorParam:Scale=1
 /processorParam:SwapWindingOrder=False
 /processorParam:TextureFormat=Compressed
-/build:note.dae
+/build:note.fbx
 
 #begin SongContainer.png
 /importer:TextureImporter
