@@ -17,16 +17,17 @@ namespace Play_Tabs
     class MenuHandle
     {
         private Texture2D rectangle;
+        private Texture2D screenGradient;
         private SpriteFont fontRegular;
         private SpriteFont fontBold;
         private short cursorIndex;
-        int screenStartX;
 
         public MenuHandle(GraphicsDevice graphicsDevice)
         {
             rectangle = new Texture2D(graphicsDevice, 1, 1, false, SurfaceFormat.Color);
             rectangle.SetData<Color>(new Color[] { Color.White });
-            screenStartX = graphicsDevice.Viewport.X;
+
+            screenGradient = CreateGradient(graphicsDevice, new Color(49, 29, 63), new Color(32, 26, 44));
 
             SongOrganizer.Initialize(graphicsDevice);
 
@@ -55,6 +56,33 @@ namespace Play_Tabs
             #endregion
         }
 
+        private Texture2D CreateGradient(GraphicsDevice graphics, Color startColor, Color endColor)
+        {
+            double angle = MathHelper.ToRadians(45);
+            double rx = Math.Cos(angle);
+            double ry = Math.Sin(angle);
+            Random random = new Random();
+
+            double start = -1.0f * (rx + ry);
+            double end = rx + ry;
+
+            Texture2D gradient = new Texture2D(graphics, graphics.Viewport.Width, graphics.Viewport.Height);
+            Color[] colorData = new Color[gradient.Width * gradient.Height];
+            for(int x = 0; x < gradient.Width; x++)
+            {
+                for(int y = 0; y < gradient.Height; y++)
+                {
+                    double u = (x / (double)gradient.Width) * 2.0f - 1.0f;
+                    double v = (y / (double)gradient.Height) * 2.0f - 1.0f;
+
+                    double here = u * rx + v * ry;
+                    colorData[x + (y * gradient.Width)] = Color.Lerp(startColor, endColor, (float)((start - here) / (start - end)) + (float)random.NextDouble() * 0.1f);
+                }
+            }
+
+            gradient.SetData(colorData);
+            return gradient;
+        }
         public void LoadContent(ContentManager Content)
         {
             fontRegular = Content.Load<SpriteFont>("Fonts/Gravity-Regular");
@@ -71,11 +99,16 @@ namespace Play_Tabs
         
         public void Draw(SpriteBatch spriteBatch)
         {
+
+            spriteBatch.Draw(screenGradient, Vector2.Zero, null, Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.0f);
+
             int index = 0;
+            int songOffset = 132;
             distance += (target - distance) * 0.125f;
             Vector2 windowCenter = spriteBatch.GraphicsDevice.Viewport.Bounds.Size.ToVector2() / 2f;
-            byte maxContainersVert = (byte)(windowCenter.Y / 128);
-            int alignCenter = (int)(windowCenter.Y - 64) - Math.Max((maxContainersVert - cursorIndex) * 128, 0) + Math.Max(cursorIndex - (SongOrganizer.songObjects.Count - 1 - maxContainersVert), 0) * 128;
+            int offsetX = spriteBatch.GraphicsDevice.Viewport.X; //Alltid noll
+            byte maxContainersVert = (byte)Math.Floor((windowCenter.Y / songOffset) - 0.5f);
+            int alignCenter = (int)(windowCenter.Y - 64) - Math.Max((maxContainersVert - cursorIndex) * songOffset, 0) + Math.Max(cursorIndex - (SongOrganizer.songObjects.Count - 1 - maxContainersVert), 0) * songOffset;
 
             foreach(SongObject song in SongOrganizer.songObjects)
             {
@@ -83,46 +116,48 @@ namespace Play_Tabs
                 if (cursorIndex == index)
                 {
                     //Song selection container
-                    spriteBatch.Draw(rectangle, new Rectangle((int)(screenStartX + distance), alignCenter + (index * 128 - cursorIndex * 128), 720, 128), null, Color.Black * 0.8f, 0.0f, Vector2.Zero, SpriteEffects.None, 0.0f);
-                    spriteBatch.Draw(rectangle, new Rectangle(screenStartX, alignCenter + (index * 128 - cursorIndex * 128), (int)distance, 128), null, new Color(30, 215, 96, 255), 0.0f, Vector2.Zero, SpriteEffects.None, 0.0f); //Green highlight accent (#1DB954)
+                    spriteBatch.Draw(rectangle, new Rectangle((int)(offsetX + (distance * 1.5f)), alignCenter + (index * songOffset - cursorIndex * songOffset), 720, 128), null, Color.Black * 0.8f, 0.0f, Vector2.Zero, SpriteEffects.None, 0.0f);
+                    spriteBatch.Draw(rectangle, new Rectangle(offsetX, alignCenter + (index * songOffset - cursorIndex * songOffset), (int)distance, 128), null, new Color(226, 62, 87), 0.0f, Vector2.Zero, SpriteEffects.None, 0.0f); //Green highlight accent (#1DB954)
 
                     //Detailed song info container
-                    song.DrawCoverArt(spriteBatch, new Vector2(screenStartX + distance, alignCenter + (index * 128 - cursorIndex * 128)), false, 0.2f);
-                    spriteBatch.DrawString(fontBold, song.title, new Vector2(screenStartX + 144 + distance, alignCenter + 16 + (index * 128 - cursorIndex * 128)), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
-                    spriteBatch.DrawString(fontRegular, song.artist, new Vector2(screenStartX + 144 + distance, alignCenter + 64 + (index * 128 - cursorIndex * 128)), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
+                    song.DrawCoverArt(spriteBatch, new Vector2(offsetX + (distance * 1.5f), alignCenter + (index * songOffset - cursorIndex * songOffset)), false, 0.2f);
+                    spriteBatch.DrawString(fontBold, song.title, new Vector2(offsetX + 144 + distance, alignCenter + 16 + (index * songOffset - cursorIndex * songOffset)), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
+                    spriteBatch.DrawString(fontRegular, song.artist, new Vector2(offsetX + 144 + distance, alignCenter + 64 + (index * songOffset - cursorIndex * songOffset)), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
                 }
 
                 else
                 {
                     //Song selection container
-                    spriteBatch.Draw(rectangle, new Rectangle(screenStartX, alignCenter + (index * 128 - cursorIndex * 128), 720, 128), null, Color.Black * 0.5f, 0.0f, Vector2.Zero, SpriteEffects.None, 0.0f);
+                    spriteBatch.Draw(rectangle, new Rectangle(offsetX, alignCenter + (index * songOffset - cursorIndex * songOffset), 720, 128), null, Color.Black * 0.5f, 0.0f, Vector2.Zero, SpriteEffects.None, 0.0f);
                     
                     //Detailed song info container
-                    song.DrawCoverArt(spriteBatch, new Vector2(screenStartX, alignCenter + (index * 128 - cursorIndex * 128)), false, 0.2f);
-                    spriteBatch.DrawString(fontBold, song.title, new Vector2(screenStartX + 144, alignCenter + 16 + (index * 128 - cursorIndex * 128)), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
-                    spriteBatch.DrawString(fontRegular, song.artist, new Vector2(screenStartX + 144, alignCenter + 64 + (index * 128 - cursorIndex * 128)), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
+                    song.DrawCoverArt(spriteBatch, new Vector2(offsetX, alignCenter + (index * songOffset - cursorIndex * songOffset)), false, 0.2f);
+                    spriteBatch.DrawString(fontBold, song.title, new Vector2(offsetX + 144, alignCenter + 16 + (index * songOffset - cursorIndex * songOffset)), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
+                    spriteBatch.DrawString(fontRegular, song.artist, new Vector2(offsetX + 144, alignCenter + 64 + (index * songOffset - cursorIndex * songOffset)), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
                 }
                 index++;
             }
 
-            spriteBatch.Draw(rectangle, new Rectangle(screenStartX + 816, 32, 300, 600), null, Color.Black * 0.5f, 0.0f, Vector2.Zero, SpriteEffects.None, 0.0f);
+            float offsetY = windowCenter.Y - 300;
+            offsetX = 720 + ((spriteBatch.GraphicsDevice.Viewport.Width - 720) / 2) - 150;
 
             if (SongOrganizer.songObjects.Count > 0)
             {
+                spriteBatch.Draw(rectangle, new Rectangle(offsetX, (int)offsetY, 300, 600), null, Color.Black * 0.5f, 0.0f, Vector2.Zero, SpriteEffects.None, 0.0f);
                 SongObject currentSong = SongOrganizer.songObjects[cursorIndex];
-                currentSong.DrawCoverArt(spriteBatch, new Vector2(screenStartX + 816, 32), true, 0.3f);
-                spriteBatch.DrawString(fontRegular, "SONG INFO", new Vector2(screenStartX + 816 + 16, 32 + 300 + 16), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
-                spriteBatch.DrawString(fontRegular, "Artist: " + currentSong.artist, new Vector2(screenStartX + 816 + 16, 32 + 300 + 16 + 64), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
-                spriteBatch.DrawString(fontRegular, "Album: " + currentSong.album, new Vector2(screenStartX + 816 + 16, 32 + 300 + 16 + 96), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
-                spriteBatch.DrawString(fontRegular, "Year: " + currentSong.year, new Vector2(screenStartX + 816 + 16, 32 + 300 + 16 + 128), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
-                spriteBatch.DrawString(fontRegular, "Title: " + currentSong.title, new Vector2(screenStartX + 816 + 16, 32 + 300 + 16 + 160), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
-                spriteBatch.DrawString(fontRegular, "Length: " + currentSong.GetLength(), new Vector2(screenStartX + 816 + 16, 32 + 300 + 16 + 192), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
+                currentSong.DrawCoverArt(spriteBatch, new Vector2(offsetX, offsetY), true, 0.3f);
+                spriteBatch.DrawString(fontBold, "INFO", new Vector2(offsetX + 16, offsetY + 300 + 16), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
+                spriteBatch.DrawString(fontRegular, "Artist: " + currentSong.artist, new Vector2(offsetX + 16, offsetY + 300 + 16 + 64), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
+                spriteBatch.DrawString(fontRegular, "Album: " + currentSong.album, new Vector2(offsetX + 16, offsetY + 300 + 16 + 96), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
+                spriteBatch.DrawString(fontRegular, "Year: " + currentSong.year, new Vector2(offsetX + 16, offsetY + 300 + 16 + 128), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
+                spriteBatch.DrawString(fontRegular, "Title: " + currentSong.title, new Vector2(offsetX + 16, offsetY + 300 + 16 + 160), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
+                spriteBatch.DrawString(fontRegular, "Length: " + currentSong.GetLength(), new Vector2(offsetX + 16, offsetY + 300 + 16 + 192), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
             }
         }
 
         //Use a timer for smooth scrolling in the song list
         double timer;
-        float delay = 200;
+        float delay = 400;
 
         /// <summary>
         /// Manage user input
@@ -133,7 +168,7 @@ namespace Play_Tabs
             if (Keyboard.GetState().IsKeyDown(Keys.Up) && (timer + delay) < gameTime.TotalGameTime.TotalMilliseconds)
             {
                 timer = gameTime.TotalGameTime.TotalMilliseconds;
-                delay = Math.Max(delay * 0.84f, 40); //Lower the delay of the timer if the user keeps scrolling
+                delay = Math.Max(delay * 0.8f, 60); //Lower the delay of the timer if the user keeps scrolling
                 cursorIndex--;
 
                 if (cursorIndex < 0)
@@ -144,7 +179,7 @@ namespace Play_Tabs
             if (Keyboard.GetState().IsKeyDown(Keys.Down) && (timer + delay) < gameTime.TotalGameTime.TotalMilliseconds)
             {
                 timer = gameTime.TotalGameTime.TotalMilliseconds;
-                delay = Math.Max(delay * 0.84f, 40); //Lower the delay of the timer if the user keeps scrolling
+                delay = Math.Max(delay * 0.8f, 60); //Lower the delay of the timer if the user keeps scrolling
                 cursorIndex++;
 
                 if (cursorIndex > (short)(SongOrganizer.songObjects.Count - 1))
@@ -155,7 +190,8 @@ namespace Play_Tabs
             //Reset delay if the user stops scrolling
             if (Keyboard.GetState().IsKeyUp(Keys.Up) && Keyboard.GetState().IsKeyUp(Keys.Down))
             {
-                delay = 200;
+                delay = 400;
+                timer = 0;
             }
         }
     }
