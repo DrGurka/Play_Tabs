@@ -139,12 +139,10 @@ namespace Play_Tabs.Tools
             }
 
             if (!albumImages.ContainsKey(newSong.artist + "+" + newSong.album)) {
-                albumImages.Add(newSong.album + newSong.artist, new AlbumImage(spotify, newSong.artist + "+" + newSong.album, graphics));
+                albumImages.Add(newSong.artist + "+" + newSong.album, new AlbumImage(spotify, newSong.artist + "+" + newSong.album, graphics));
             }
             return newSong;
         }
-
-        
 
         private static JContainer FindArrangment(string arrangment, JProperty property)
         {

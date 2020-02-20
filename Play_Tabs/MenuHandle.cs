@@ -32,17 +32,14 @@ namespace Play_Tabs
             SongOrganizer.Initialize(graphicsDevice);
 
             #region Test
-            SongOrganizer.songObjects.Add(new SongObject("") { title = "Roundabout", album = "Fragile", artist = "Yes", length = 300, tuningLead = new sbyte[6], tuningRhythm = new sbyte[6], year = "1979" });
-            SongOrganizer.songObjects.Add(new SongObject("") { title = "Africa", album = "Toto IV", artist = "Toto", length = 180, tuningLead = new sbyte[6], tuningRhythm = new sbyte[6], year = "1576" });
-            SongOrganizer.songObjects.Add(new SongObject("") { title = "Roundabout2", album = "Fragile", artist = "Yes", length = 300, tuningLead = new sbyte[6], tuningRhythm = new sbyte[6], year = "1979" });
-            SongOrganizer.songObjects.Add(new SongObject("") { title = "Africa2", album = "Toto IV", artist = "Toto", length = 180, tuningLead = new sbyte[6], tuningRhythm = new sbyte[6], year = "1576" });
-            SongOrganizer.songObjects.Add(new SongObject("") { title = "Roundabout3", album = "Fragile", artist = "Yes", length = 300, tuningLead = new sbyte[6], tuningRhythm = new sbyte[6], year = "1979" });
-            SongOrganizer.songObjects.Add(new SongObject("") { title = "Africa3", album = "Toto IV", artist = "Toto", length = 180, tuningLead = new sbyte[6], tuningRhythm = new sbyte[6], year = "1576" });
-            SongOrganizer.songObjects.Add(new SongObject("") { title = "Roundabout4", album = "Fragile", artist = "Yes", length = 300, tuningLead = new sbyte[6], tuningRhythm = new sbyte[6], year = "1979" });
-            SongOrganizer.songObjects.Add(new SongObject("") { title = "Africa4", album = "Toto IV", artist = "Toto", length = 180, tuningLead = new sbyte[6], tuningRhythm = new sbyte[6], year = "1576" });
-            SongOrganizer.songObjects.Add(new SongObject("") { title = "Roundabout5", album = "Fragile", artist = "Yes", length = 300, tuningLead = new sbyte[6], tuningRhythm = new sbyte[6], year = "1979" });
-            SongOrganizer.songObjects.Add(new SongObject("") { title = "Africa5", album = "Toto IV", artist = "Toto", length = 180, tuningLead = new sbyte[6], tuningRhythm = new sbyte[6], year = "1576" });
-
+            SongOrganizer.songObjects.Add(new SongObject("") { title = "Roundabout", album = "Yesstory", artist = "Yes", length = 512, tuningLead = new sbyte[6], tuningRhythm = new sbyte[6], year = "1992" });
+            SongOrganizer.songObjects.Add(new SongObject("") { title = "Africa", album = "Toto IV", artist = "Toto", length = 296, tuningLead = new sbyte[6], tuningRhythm = new sbyte[6], year = "1982" });
+            SongOrganizer.songObjects.Add(new SongObject("") { title = "Parabola", album = "Lateralus", artist = "Tool", length = 364, tuningLead = new sbyte[6], tuningRhythm = new sbyte[6], year = "2001" });
+            SongOrganizer.songObjects.Add(new SongObject("") { title = "The Frail", album = "The Fragile", artist = "Nine Inch Nails", length = 114, tuningLead = new sbyte[6], tuningRhythm = new sbyte[6], year = "1999" });
+            SongOrganizer.songObjects.Add(new SongObject("") { title = "The Outsider", album = "Thirteenth Step", artist = "A Perfect Circle", length = 246, tuningLead = new sbyte[6], tuningRhythm = new sbyte[6], year = "2003" });
+            SongOrganizer.songObjects.Add(new SongObject("") { title = "Bonneville", album = "Malina", artist = "Leprous", length = 329, tuningLead = new sbyte[6], tuningRhythm = new sbyte[6], year = "2017" });
+            SongOrganizer.songObjects.Add(new SongObject("") { title = "Amsterdam", album = "Broken Machine", artist = "Nothing But Thieves", length = 272, tuningLead = new sbyte[6], tuningRhythm = new sbyte[6], year = "2017" });
+            SongOrganizer.songObjects.Add(new SongObject("") { title = "Change (In the House of Flies)", album = "White Pony", artist = "Deftones", length = 300, tuningLead = new sbyte[6], tuningRhythm = new sbyte[6], year = "2000" });
 
             CredentialsAuth auth = new CredentialsAuth("e1c3ce28971a4396bd46eba97d14c271", "951448c26c5544ce8af238bdda3277d8");
             Token token = Task.Run(() => auth.GetToken()).Result;
@@ -51,8 +48,11 @@ namespace Play_Tabs
                 AccessToken = token.AccessToken,
                 TokenType = token.TokenType
             };
-            SongOrganizer.albumImages.Add("Yes+Fragile", new AlbumImage(spotify, "Yes+Fragile", graphicsDevice));
-            SongOrganizer.albumImages.Add("Toto+Toto IV", new AlbumImage(spotify, "Toto+Toto IV", graphicsDevice));
+
+            foreach(SongObject song in SongOrganizer.songObjects)
+            {
+                SongOrganizer.albumImages.Add(song.artist + "+" + song.album, new AlbumImage(spotify, song.artist + "+" + song.album, graphicsDevice));
+            }
             #endregion
         }
 
